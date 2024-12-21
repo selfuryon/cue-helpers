@@ -29,14 +29,14 @@ import (
 
 		if regexp.Match(pattern, input) == true {
 			let r = regexp.FindNamedSubmatch(pattern, input)
-			let number = strconv.Atoi(r.number)
-			let prefix = r.prefix
+			let num = strconv.Atoi(r.number)
+			let pref = r.prefix
 
-			if prefix == "" {
-				value: number
+			if pref == "" {
+				value: num
 			}
-			if prefix != "" {
-				value: number * _multipliers[prefix]
+			if pref != "" {
+				value: num * _multipliers[pref]
 			}
 		}
 
