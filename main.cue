@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-#SizeConverter: {
+#Number: {
 	_multipliers: {
 		Ki: 1024
 		Mi: 1024 * Ki
@@ -22,48 +22,46 @@ import (
 		E: 1000 * P
 	}
 
-	ParseSize: {
-		input: string
-		value: int | *null
-		let pattern = "^(?<number>[0-9]+)(?<prefix>[KMGTPE]i?)?$"
+    value: int
+    value_postfix: string
 
-		if regexp.Match(pattern, input) == true {
-			let r = regexp.FindNamedSubmatch(pattern, input)
-			let num = strconv.Atoi(r.number)
-			let pref = r.prefix
+    let pattern = "^(?<number>[0-9]+)(?<prefix>[KMGTPE]i?)?$"
+    if regexp.Match(pattern, value_postfix) == true {
+        let r = regexp.FindNamedSubmatch(pattern, value_postfix)
+        let num = strconv.Atoi(r.number)
+        let pref = r.prefix
 
-			if pref == "" {
-				value: num
-			}
-			if pref != "" {
-				value: num * _multipliers[pref]
-			}
-		}
-
-	}
+        if pref == "" {
+            value: num
+        }
+        if pref != "" {
+            value: num * _multipliers[pref]
+        }
+    }
 }
 
-_tests: {
-	test1: #SizeConverter.ParseSize & {
-		input: "1Ki"
+tests: {
+	test1: #Number & {
+		value_postfix: "1Ki"
 		value: 1024
 	}
 
-	test2: #SizeConverter.ParseSize & {
-		input: "1M"
+	test2: #Number & {
+		value_postfix: "1M"
 		value: 1000000
 	}
 
-	test3: #SizeConverter.ParseSize & {
-		input: "5Gi"
-		value: 5368709120
+	test3: #Number & {
+		value_postfix: "5Gi"
+        value: 5368709120
+
 	}
-	test4: #SizeConverter.ParseSize & {
-		input: "5K"
+	test4: #Number & {
+		value_postfix: "5K"
 		value: 5000
 	}
-	test5: #SizeConverter.ParseSize & {
-		input: "5iK"
-		value: null
+	test5: #Number & {
+		value_postfix: "5Ki"
+        value: 5120
 	}
 }
